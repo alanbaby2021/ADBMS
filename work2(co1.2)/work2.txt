@@ -1,0 +1,96 @@
+create table emp(empid varchar(20) primary key check(empid like 'e%'),empname varchar(30),Street_no varchar(30),city varchar(30));
+
+create table company(company_name varchar(30) primary key,city varchar(30));
+
+create table works(empid varchar(20) references emp(empid),company_name varchar(30) references company(company_name),salary int);
+
+create table manages(empid varchar(20) references emp(empid),manager_id varchar(20) references emp(empid));
+
+insert into emp values('e101','abhiram','strt-101','Tripunithara');
+
+insert into emp values('e102','akhil','strt-102','piravom');
+
+insert into emp values('e103','amalesh','strt-103','kannur');
+
+insert into emp values('e104','devu','strt-104','mallapally');
+
+insert into emp values('e105','aswin','str-105','kolenchery');
+
+insert into emp values('e106','anandhu','str-106','piravom');
+
+insert into emp values('e107','fabin','str-107','Thrissur');
+
+insert into emp values('e108','ganga','strt-108','ernakulam');
+
+insert into emp values('e109','athira','strt-109','wayanad');
+
+
+
+insert into company values('sbi','piravom');
+
+insert into company values('indian bank','kottayam');
+
+insert into company values('federal','thrissur');
+
+
+
+insert into works values('e101','sbi',30000);
+
+insert into works values('e102','sbi',40000);
+
+insert into works values('e103','indian bank',35000);
+
+insert into works values('e104','indian bank',40000);
+
+insert into works values('e105','sbi',60000);
+
+insert into works values('e106','sbi',40000);
+
+insert into works values('e107','indian bank',65000);
+
+insert into works values('e108','federal',60000);
+
+insert into works values('e109','federal',70000);
+
+
+
+insert into manages values('e101','e105');
+
+insert into manages values('e102','e105');
+
+insert into manages values('e106','e105');
+
+insert into manages values('e103','e107');
+
+insert into manages values('e104','e107');
+
+insert into manages values('e108','e109');
+
+
+
+
+select empname from emp where empid in(select empid from works where company_name='sbi');
+
+select empname from emp e,works w,company c where e.empid=w.empid and e.city=c.city and w.company_name=c.company_name;
+
+select empname from emp e,works w where e.empid=w.empid and w.salary>(select avg(salary) from works s where w.company_name=s.company_name);
+
+update works w set salary=salary+salary*0.1 where company_name='sbi' and empid in(select manager_id from manages);
+
+select company_name from works,emp group by company_name
+having count(empname) = (select max(count(empname))from works,emp
+group by company_name);
+
+
+select company_name
+from works
+group by company_name
+having avg(salary) > (select avg(salary) from works where company_name='indian bank');
+
+
+
+select empname,salary from emp e,works w where e.empid=w.empid 
+and 
+company_name!='indian bank'
+ and 
+salary>(select min(salary) from works where company_name='indian bank');
