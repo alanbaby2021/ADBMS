@@ -1,0 +1,39 @@
+create table item(item_id varchar(20),item_name varchar(20),price int); 
+
+
+insert into item values('p101','bread',30);
+insert into item values('p102','cheese',65);
+insert into item values('p103','egg',13);
+insert into item values('p104','soup',99);
+insert into item values('p105','oil',110);
+
+
+
+declare
+id varchar(10);
+begin
+id:='&id';
+dbms_output.put_line(getdata(id));
+end;
+
+
+
+
+create or replace function getdata(id varchar2)
+return number as
+p item.item_name%type;
+q item.price%type;
+
+begin
+
+select item_name,price into p,q from item where item_id=id;
+
+ dbms_output.put_line('Item name   item price');
+ dbms_output.put_line(p||'           '||q);
+return 0;
+end;
+
+
+
+
+

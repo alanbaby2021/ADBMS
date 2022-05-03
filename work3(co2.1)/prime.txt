@@ -1,0 +1,28 @@
+declare
+n number;
+c number:=1;
+begin
+n:=&n;
+
+if n=1
+then
+dbms_output.put_line('Not prime');
+
+else
+for i in 1..n/2
+loop
+if mod(n,i)=0
+then
+c:=c+1;
+end if;
+end loop;
+
+if c=2
+then
+dbms_output.put_line('prime');
+else
+dbms_output.put_line('Not prime');
+end if;
+end if;
+
+end;

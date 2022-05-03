@@ -1,0 +1,36 @@
+ create or replace function armstr(x in number)
+ return number as
+ z number;
+ s number:=0;
+ r number;
+ l number;
+n number;
+ begin
+ n:=x;
+ l:=length(n);
+while n>0
+ loop
+r:=mod(n,10);
+s:=s+power(r,l);
+n:=trunc(n/10);
+end loop;
+z:=s;
+return z;
+end;
+
+
+
+
+ declare
+ n number;
+ c number;
+ begin
+ n:=&n;
+ c:=armstr(n);
+ if c=n
+ then
+ dbms_output.put_line('Armstrong');
+ else
+ dbms_output.put_line('Not Armstrong');
+ end if;
+ end;

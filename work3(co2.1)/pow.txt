@@ -1,0 +1,37 @@
+create or replace function powr(a number,b number)
+return number as
+r number;
+n1 number;
+n2 number;
+begin
+n1:=a;
+n2:=b;
+r:=power(n1,n2);
+return r;
+end;
+/
+
+
+
+
+declare
+x number;
+y number;
+begin
+x:=&x;
+y:=&y;
+dbms_output.put_line('result='||powr(x,y));
+end;
+
+
+
+
+
+create or replace function powr(a number,b number)
+return number as
+r number;
+begin
+r:=power(a,b);
+return r;
+end;
+/
