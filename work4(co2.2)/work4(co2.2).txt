@@ -1,0 +1,108 @@
+
+#first question-start
+
+create table bank(accno int,year int,amount int,interest int);
+
+insert into bank values(1001,2020,800,0);
+insert into bank values(1002,2021,700,0);
+insert into bank values(1003,2022,2000,0);
+insert into bank values(1004,2022,6000,0);
+
+declare
+cursor c1 is select * from bank;
+begin
+for i in c1
+loop
+if i.amount<=1000
+then
+update bank set interest=i.amount*0.1 where accno=i.accno;
+elsif i.amount>1000 and i.amount<=5000 
+then
+update bank set interest=i.amount*0.2 where accno=i.accno;
+else
+update bank set interest=i.amount*0.3 where accno=i.accno;
+end if;
+end loop;
+end;
+/
+
+#first question-end
+
+
+
+#second question-start
+
+create table electricity(billno int,name varchar(25),unit int,charge float);
+
+insert into electricity values(2001,'ajayan',75,0);
+insert into electricity values(2002,'abhirami',200,0);
+insert into electricity values(2003,'emily',150,0);
+insert into electricity values(2004,'anitta',250,0);
+insert into electricity values(2005,'bibin',100,0);
+
+declare
+cursor c2 is select * from electricity;
+begin
+for i in c2
+loop
+if i.unit<=100
+then
+update electricity set charge=100+i.unit*0.2 where billno=i.billno;
+elsif i.unit>100 and i.unit<=200
+then
+update electricity set charge=100+i.unit*0.4 where billno=i.billno;
+else
+update electricity set charge=100+i.unit*0.5 where billno=i.billno;
+end if;
+end loop;
+end;
+
+#second question-end
+
+
+#third question-start
+
+#refer item table
+
+declare
+r int;
+begin
+if sql%notfound
+ then
+dbms_output.put_line('Not updated');
+else
+update item set price=100; 
+r:=sql%rowcount;
+dbms_output.put_line('Price for '||r||' items updated');
+end if;
+end;
+
+#third question-end
+
+
+#fourth question-start
+
+create table workers(emp_id int,company_name varchar(25),salary int);
+
+insert into workers values(101,'tcs',25000);
+insert into workers values(102,'tcs',30000);
+insert into workers values(103,'wipro',40000);
+insert into workers values(104,'wipro',20000);
+insert into workers values(105,'infosys',38000);
+
+
+declare
+i int:=0;
+cursor c5 is select * from workers order by salary desc;
+r c5%rowtype;
+begin
+open c5;
+loop
+exit when i=3;
+fetch c5 into r;
+dbms_output.put_line(r.emp_id||' '||r.company_name||' '||r.salary);
+i:=i+1;
+end loop;
+close c5;
+end;
+/
