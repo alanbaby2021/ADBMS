@@ -1,0 +1,81 @@
+create table account(account_no number,accountholder_name varchar(20),balance number);
+
+
+insert into account values(1001,'amalesh',3000);
+insert into account values(1002,'devu',2000);
+insert into account values(1003,'athul',4000);
+insert into account values(1004,'anandhu',5000);
+insert into account values(1005,'aswin',2000);
+
+create or replace procedure withdraw(accno int,amnt int) is
+begin
+update account set balance=balance-amnt where account_no=accno;  
+end;
+/
+
+create or replace procedure deposit(accno int,amnt int) is
+begin
+update account set balance=balance+amnt where account_no=accno;
+end;
+/
+
+
+create or replace procedure  display is
+cursor c5 is select * from account;
+r c5%ROWTYPE;
+begin
+open c5;
+loop
+fetch c5 into r;
+exit when c5%NOTFOUND;
+dbms_output.put_line(r.account_no||' '||r.accountholder_name||' '||r.balance);
+end loop;
+close c5;
+end;
+
+
+declare
+choice number;
+accno int;
+amnt int;
+begin
+accno:=&accno;
+amnt:=&amnt;
+dbms_output.put_line('1.deposit');
+dbms_output.put_line('2.Withdraw');
+choice:=&choice;
+if choice=1
+then
+deposit(accno,amnt);
+elsif choice=2
+then
+withdraw(accno,amnt);
+else
+display();
+end if;
+end;
+
+
+
+create table product(productid int,product_name varchar(30),price int);
+
+insert into product values(101,'usb',800);
+insert into product values(102,'smart watch',2000);
+insert into product values(103,'laptop',30000);
+insert into product values(101,'tv',18000);
+
+
+create or replace procedure error(pid int) is
+invalid_pid Exception;
+begin
+update product set price=price+100 where productid=pid;
+if sql%notfound 
+then
+raise invalid_pid;
+end if;
+Exception
+when invalid_pid then
+dbms_output.put_line('pid not found');
+dbms_output.put_line(sqlcode);
+dbms_output.put_line(sqlcode);
+end;
