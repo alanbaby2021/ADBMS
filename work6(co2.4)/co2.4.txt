@@ -1,0 +1,74 @@
+#firstquestion
+
+create table sample(sid number,sname varchar(20));
+
+insert into sample values(101,'ajay');
+insert into sample values(102,'fabin');
+
+select * from sample;
+
+create or replace trigger t1
+before insert or update or delete on sample for each    
+row
+begin
+raise_application_error(-20000,'you are not permitted to do INSERT/UPDATE/DELETE');
+end;
+
+insert into sample values(103,'abin');
+
+
+#second question
+
+
+create table professor(pnum int,pname varchar(30),salary int);
+
+insert into professor values(101,'nishan',70000);
+insert into professor values(102,'sreerag',80000);
+
+select * from professor;
+
+
+create or replace trigger minsalary 
+before insert on professor
+for each row
+begin
+if(:new.salary<60000)
+then
+raise_application_error(-20000,'violation of minimum professor salary');
+end if;
+end;
+
+insert into professor values(103,'seethu',50000);
+
+
+#thirdquestion
+
+create table probacklog(pnum int,pname varchar(30),salary int);
+
+create or replace trigger tiger
+after delete on professor
+for each row
+begin
+insert into probacklog values(:old.pnum,:old.pname,:old.salary);
+end;
+
+delete from professor where pnum=102;
+
+
+#fourthquestion
+
+create table gold(cdate date,price int);
+
+create table pricehistory(odate date,price int);
+
+insert into gold values(sysdate,30000);
+
+
+create or replace trigger s2
+after update on gold
+for each row
+begin
+insert into pricehistory values(:old.cdate,:old.price);
+end;
+
+update gold set price=90000,cdate=sysdate;

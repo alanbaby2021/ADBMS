@@ -1,0 +1,111 @@
+create table sample(sid number,sname varchar(20));
+
+
+insert into sample values(101,'ajay');
+insert into sample values(101,'fabin');
+insert into sample values(102,'abin');
+
+
+
+create or replace trigger t1
+before insert or update or delete on sample for each    
+row
+begin
+raise_application_error(-20000,'you are not permitted to do INSERT/UPDATE/DELETE');
+end;
+/
+
+
+
+
+create or replace trigger t3
+after update on sample for each    
+row
+begin
+raise_application_error(-20001,'you inserted one row');
+end;
+/
+
+
+create table professor(pnum int,pname varchar(30),salary int);
+
+insert into professor values(101,'nishan',10000);
+insert into professor values(102,'sreerag',10001);
+
+
+select * from professor;
+
+
+
+create or replace trigger minsalary 
+before insert on professor
+for each row
+begin
+if(:new.salary<60000)
+then
+raise_application_error(-20000,'violation of minimum professor salary');
+end if;
+end;
+
+
+
+create table probacklog as select * from professor;
+
+
+delete from probacklog;
+
+create or replace trigger tiger
+after delete on professor
+for each row
+begin
+insert into probacklog values(:old.pnum,:old.pname,:old.salary);
+end;
+
+
+delete from PROFESSOR;
+
+
+
+create table student(rollno int,name varchar(30),gender varchar(30));
+
+create table count(f int,m int);
+
+insert into count values(0,0);
+
+insert into student values(1,'albin','f');
+insert into student values(2,'ajay','m');
+insert into student values(3,'abhay','f');
+
+create or replace trigger s
+after insert on student
+for each row
+begin
+if(:new.gender='m')
+then
+update count set m=m+1;
+else
+update count set f=f+1;
+end if;
+end;
+/
+
+
+
+
+create table gold(cdate date,price int);
+
+create table pricehistory(odate date,price int);
+
+
+insert into gold values(sysdate,30000);
+
+create or replace trigger s2
+after update on gold
+for each row
+begin
+insert into pricehistory values(:old.cdate,:old.price);
+end;
+/
+
+
+update gold set price=90000,cdate=sysdate;
