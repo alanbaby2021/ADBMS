@@ -1,0 +1,31 @@
+use employee
+
+db.createCollection("empdetails")
+
+db.empdetails.insertOne({"name":"ramanan","age":45,"email":"ramanan@gmail.com","salary":5000})
+
+db.empdetails.insert({"name":"mohan","age":75,"email":"mohan@gmail.com","salary":3000})
+
+ db.empdetails.insertMany( [
+      {"name":"bhuvan","age":23,"email":"bhuvan@gmail.com","salary":8000},
+      {"name":"raju","age":23,"email":"raju@gmail.com","salary":2000},
+     {"name":"raju","age":23,"email":"raju@gmail.com","salary":1000}
+   ] );
+
+db.empdetails.find({"name":"mohan"})
+
+db.empdetails.find({salary:{$gte:5000}})
+
+db.empdetails.find({name:/^r/})
+
+db.empdetails.find({name:{$nin:["mohan","raju","bhuvan"]}})
+
+db.empdetails.find({name:{$in:["mohan","raju","bhuvan"]}})
+
+db.empdetails.find({age:{$lt:30}},{name:1,salary:0})
+
+db.empdetails.find({$and:[{salary:{$gt:5000}},{age:{$lt:30}}]})
+
+db.empdetails.update({name:"mohan"},{$set:{email:"neil@gmail.com"}});
+
+db.empdetails.deleteOne({age:{$gt:56}})
