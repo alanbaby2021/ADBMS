@@ -1,0 +1,54 @@
+db.empdetails.update({name:"bhuvan"},{$set:{dept:"Developer"}})
+
+
+db.empdetails.aggregate([{$group:{_id:"$dept","avg_salary":{$avg:"$salary"}}}])
+
+db.empdetails.aggregate([{$group:{_id:"$dept","Min_salary":{$min:"$salary"}}}])
+
+db.empdetails.aggregate([{$group:{_id:"$dept","Max_salary":{$max:"$salary"}}}])
+
+db.empdetails.aggregate([{$group:{_id:"$dept","No of employees":{$sum:1}}}])
+
+db.empdetails.find().sort({name:-1})
+
+db.empdetails.createIndex({name:"text"})
+
+db.empdetails.find({$text:{$search:"mohan bhuvan"}})
+
+
+
+use inventory
+
+db.createCollection("orders")
+
+db.orders.insertMany([{custid:200,name:"maya",item:"rice",price:340},
+{custid:201,name:"manu",item:"rice",price:340},
+{custid:202,name:"meera",item:"sugar",price:150},
+{custid:202,name:"meera",item:"wheat",price:250},
+{custid:200,name:"maya",item:"wheat",price:250}])
+
+
+var mapFunction=function(){emit(this.custid,this.price);};
+
+var reduceFunction=function(key,values){return Array.sum(values);};
+
+db.orders.mapReduce(mapFunction,reduceFunction,{'out':"map_example"})
+
+db.map_example.find();
+
+
+var mapFunction=function(){emit(this.custid,this.price);};
+
+var reduceFunction=function(key,values){return Array.avg(values);};
+
+db.orders.mapReduce(mapFunction,reduceFunction,{$query:{custid:{$gt:201}},{'out':"map_example1"})
+
+db.map_example1.find();
+
+
+db.orders.mapReduce( 
+   function() { emit(this.custid,this.price); },function(key, values) {return Array.sum(values)}, {  
+      query:{custid:{$gt:201}},  
+      out:"map_example2" 
+   }
+)
